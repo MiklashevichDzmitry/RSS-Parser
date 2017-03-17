@@ -34,7 +34,7 @@ class Parser: NSObject, XMLParserDelegate {
         currentAttributes = attributeDict
         currentChar = ""
 
-        if elementName == "item"{
+        if currentElement == "item"{
             
             let newsDataEntity = NSEntityDescription.entity(forEntityName: "NewsData", in: managedContext)
             
@@ -81,7 +81,7 @@ class Parser: NSObject, XMLParserDelegate {
             case "title":
                 self.currentNewsItem?.newsTitle = self.currentChar
             case "description":
-                self.currentNewsItem?.shortDesc = self.currentChar.EscapingHTMLTags()
+                self.currentNewsItem?.shortDesc = self.currentChar.escapingHTMLTags()
             case "guid":
                 self.currentNewsItem?.guid = self.currentChar
             case "link":

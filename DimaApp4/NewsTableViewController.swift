@@ -25,10 +25,6 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
         dateFormatter.dateFormat = "EEE, dd MMM yyyy, HH:mm"
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-
-          }
-    
 
     override func viewDidLoad() {
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -36,12 +32,11 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
         super.viewDidLoad()
         reloadData()
         self.refreshControl?.addTarget(self, action: #selector(NewsTableViewController.reloadData), for: UIControlEvents.valueChanged)
-        newsLoader.loadNews()
     }
     
     func reloadData() {
         newsLoader.loadNews()
-          }
+    }
     
     func refreshUI() {
         
@@ -65,11 +60,10 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
         return currentNews?.count ?? 0
         
     }
-    
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cellIdentifier = "NewsTableViewCell"
+        let cellIdentifier = "NewsTableViewCell" // TODO: make a constant
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? NewsTableViewCell else {
             fatalError("The dequeued cell is not an instance of NewsTableViewCell.")
@@ -80,7 +74,7 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
         if let currentImages = item.getImages {
             if currentImages.count > 1  {
                 cell.ifGalleryLabel.isHidden = false
-                cell.ifGalleryLabel.text = "Gallery [\(item.getImages!.count)]"
+                cell.ifGalleryLabel.text = "Gallery [\(currentImages.count)]"
             } else {
                 cell.ifGalleryLabel.isHidden = true
             }

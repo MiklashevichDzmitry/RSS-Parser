@@ -10,7 +10,7 @@ import Foundation
 
 extension String {
     
-    public func EscapingHTMLTags() -> String {
+    public func escapingHTMLTags() -> String {
         
         let delChar = "<[^>]+>"
         let range = NSMakeRange(0, characters.count)

@@ -21,10 +21,9 @@ class LoadingImageView: UIImageView {
     }
     
     override func awakeFromNib() {
-        
         spinner = UIActivityIndicatorView.init(activityIndicatorStyle: .gray)
-        spinner.backgroundColor = UIColor.gray
         self.addSubview(spinner)
+        spinner.backgroundColor = UIColor.gray
         spinner.translatesAutoresizingMaskIntoConstraints = false
         let viewSpinner = ["spinner": spinner]
         var spinnerConstrains = [NSLayoutConstraint]()
@@ -48,8 +47,11 @@ class LoadingImageView: UIImageView {
                         self.spinner.stopAnimating()
                     }
                 } else {
-                    self.image = #imageLiteral(resourceName: "No_Photo_Available")
-                    self.spinner.stopAnimating()
+                    DispatchQueue.main.async {
+                        self.image = #imageLiteral(resourceName: "No_Photo_Available")
+                        self.spinner.stopAnimating()
+                    }
+                    
                 }
             }); loadTask?.resume()
         }

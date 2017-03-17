@@ -19,7 +19,7 @@ protocol NewsLoaderDelegate {
 
 class NewsLoader {
     
-    var newsData = [NewsData]()
+
     var isLoading = false
     var delegate: NewsLoaderDelegate? = nil
     var newsTableViewCell = NewsTableViewCell()
@@ -33,7 +33,6 @@ class NewsLoader {
         guard let url = URL(string: todoEndpoint) else {
             print("Error: cannot create URL")
             return
-            //vihrivinrnvirnvirnvir
         }
         let urlRequest = URLRequest(url: url)
         let config = URLSessionConfiguration.default
