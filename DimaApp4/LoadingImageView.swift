@@ -38,7 +38,8 @@ class LoadingImageView: UIImageView {
     public func imageFromUrl(urlString: String) {
         spinner.startAnimating()
         if let url = URL(string: urlString) {
-            let urlRequest = URLRequest(url: url)
+            var urlRequest = URLRequest(url: url)
+            urlRequest.timeoutInterval = 1
             loadTask?.cancel()
             loadTask = session?.dataTask(with: urlRequest, completionHandler: { (data, response, error) in
                 if let data = data{
@@ -47,7 +48,8 @@ class LoadingImageView: UIImageView {
                         self.spinner.stopAnimating()
                     }
                 } else {
-                    self.image = UIImage(named: "No_Photo_Available")
+                    self.image = #imageLiteral(resourceName: "No_Photo_Available")
+                    self.spinner.stopAnimating()
                 }
             }); loadTask?.resume()
         }

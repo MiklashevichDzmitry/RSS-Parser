@@ -70,6 +70,7 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cellIdentifier = "NewsTableViewCell"
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? NewsTableViewCell else {
             fatalError("The dequeued cell is not an instance of NewsTableViewCell.")
         }
@@ -77,17 +78,18 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
         let item = currentNews![indexPath.row]
         
         if let currentImages = item.getImages {
-        if currentImages.count > 1  {
-            cell.ifGalleryLabel.isHidden = false
-            cell.ifGalleryLabel.text = "Gallery [\(item.getImages!.count)]"
-        } else {
-            cell.ifGalleryLabel.isHidden = true
+            if currentImages.count > 1  {
+                cell.ifGalleryLabel.isHidden = false
+                cell.ifGalleryLabel.text = "Gallery [\(item.getImages!.count)]"
+            } else {
+                cell.ifGalleryLabel.isHidden = true
             }
         }
         
         cell.dateLabel.text = dateFormatter.string(from: item.value(forKey: "date") as! Date)
         cell.titleLabel.text = item.value(forKey: "newsTitle") as! String?
         cell.newsImage.imageFromUrl(urlString: item.value(forKey: "imageURL") as! String)
+        
         
         return cell
     }
@@ -100,6 +102,8 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
         performSegue(withIdentifier: "detailSegue", sender: self)
         
     }
+    
+  
         
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "detailSegue") {

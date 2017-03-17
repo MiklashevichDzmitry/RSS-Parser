@@ -33,6 +33,7 @@ class NewsLoader {
         guard let url = URL(string: todoEndpoint) else {
             print("Error: cannot create URL")
             return
+            //vihrivinrnvirnvirnvir
         }
         let urlRequest = URLRequest(url: url)
         let config = URLSessionConfiguration.default

@@ -38,14 +38,18 @@ class Parser: NSObject, XMLParserDelegate {
             
             let newsDataEntity = NSEntityDescription.entity(forEntityName: "NewsData", in: managedContext)
             
-            currentNewsItem = NSManagedObject(entity: newsDataEntity!, insertInto: nil) as? NewsData
+            managedContext.performAndWait({
+                 self.currentNewsItem = NSManagedObject(entity: newsDataEntity!, insertInto: self.managedContext) as? NewsData
+            })
+           
             
         }
+        
         if elementName == "media:content"{
             if let urlImage = currentAttributes["url"] {
                 let newsImageEntity = NSEntityDescription.entity(forEntityName: "NewsImages", in: managedContext)
                 managedContext.performAndWait({ 
-                    if let newsImage = NSManagedObject(entity: newsImageEntity!, insertInto: nil) as? NewsImages{
+                    if let newsImage = NSManagedObject(entity: newsImageEntity!, insertInto: self.managedContext) as? NewsImages{
                         newsImage.url = urlImage
                         self.currentNewsItem?.addToGetImages(newsImage)
                     }
@@ -55,7 +59,10 @@ class Parser: NSObject, XMLParserDelegate {
         
         if elementName == "enclosure"{
             if let imageURL = currentAttributes["url"]{
-                currentNewsItem?.imageURL = imageURL
+                managedContext.performAndWait({ 
+                     self.currentNewsItem?.imageURL = imageURL
+                })
+               
             }
         }
     }
@@ -69,47 +76,37 @@ class Parser: NSObject, XMLParserDelegate {
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         
-        switch elementName {
-        case "title":
-            currentNewsItem?.newsTitle = currentChar
-        case "description":
-            currentNewsItem?.shortDesc = currentChar.EscapingHTMLTags()
-        case "guid":
-            currentNewsItem?.guid = currentChar
-        case "link":
-            currentNewsItem?.link = currentChar
-        case "pubDate":
-            currentNewsItem?.date = dateFormatter?.date(from: currentChar) as NSDate?
-        case "item":
-            if let guid = currentNewsItem?.guid {
-                if let currentNewsItem = currentNewsItem {
-                    let predicate = NSPredicate(format: "guid == %@", guid)
-                    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewsData")
-                    fetchRequest.predicate = predicate
-                    fetchRequest.fetchBatchSize = 20
-                    managedContext.performAndWait({
+        managedContext.performAndWait {
+            switch elementName {
+            case "title":
+                self.currentNewsItem?.newsTitle = self.currentChar
+            case "description":
+                self.currentNewsItem?.shortDesc = self.currentChar.EscapingHTMLTags()
+            case "guid":
+                self.currentNewsItem?.guid = self.currentChar
+            case "link":
+                self.currentNewsItem?.link = self.currentChar
+            case "pubDate":
+                self.currentNewsItem?.date = self.dateFormatter?.date(from: self.currentChar) as NSDate?
+            case "item":
+                if let guid = self.currentNewsItem?.guid {
+                    if let currentNewsItem = self.currentNewsItem {
+                        let predicate = NSPredicate(format: "guid == %@", guid)
+                        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewsData")
+                        fetchRequest.predicate = predicate
+                        fetchRequest.fetchBatchSize = 20
                         if let results = try? self.managedContext.fetch(fetchRequest) as! [NewsData] {
-                            if results.isEmpty {
-                                self.managedContext.insert(currentNewsItem)
-                                if let images = currentNewsItem.getImages {
-                                    images.enumerateObjects({ (image, pointer) in
-                                        if let newsImage = image as? NewsImages {
-                                            self.managedContext.performAndWait({
-                                                self.managedContext.insert(newsImage)
-                                            })
-                                        }
-                                    })
-                                }
+                            if results.count > 1 {
+                                self.managedContext.delete(currentNewsItem)
                                 self.currentNewsItem = nil
                             }
                         }
-                    })
-                    
+                    }
                 }
+                
+            default:
+                break
             }
-            
-        default:
-            break
         }
     }
     
