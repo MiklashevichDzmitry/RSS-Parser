@@ -38,15 +38,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DimaApp4/NewsTableViewController.swift"
-            timestampString = "510767443.881428"
+            timestampString = "515002631.735644"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145">
+            startingLineNumber = "151"
+            endingLineNumber = "151">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -62,7 +62,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CollectionViewController.swift"
@@ -76,16 +76,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "DimaApp4/LoadingImageView.swift"
-            timestampString = "510767434.692674"
+            filePath = "DimaApp4/Parser.swift"
+            timestampString = "515599811.52784"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "45"
-            endingLineNumber = "45"
-            landmarkName = "imageFromUrl(urlString:)"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
+            landmarkName = "parser(_:didEndElement:namespaceURI:qualifiedName:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "DimaApp4/NewsStorageManager.swift"
+            timestampString = "515605120.211805"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "createNewsList(newsDictionaryArray:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

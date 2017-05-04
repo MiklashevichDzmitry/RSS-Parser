@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11542" systemVersion="16B2555" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16D32" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="NewsImages">
     <entity name="NewsData" representedClassName=".NewsData" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>

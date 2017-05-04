@@ -11,7 +11,7 @@ import UIKit
 class DetailViewController: UIViewController {
     
     var newsData: NewsData?
-
+       
     override func viewWillAppear(_ animated: Bool) {
         
         if let newsItem = newsData{

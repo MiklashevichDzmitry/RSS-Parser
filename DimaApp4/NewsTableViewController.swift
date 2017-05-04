@@ -26,8 +26,12 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-
-          }
+        NotificationCenter.default.addObserver(forName: NewsStorageManager.updateNotificationKey, object: nil, queue: nil) { notification in
+           self.currentNews = NewsStorageManager.sharedInstance.fetchCurrentObjects()
+           self.refreshUI()
+        }
+        
+    }
     
 
     override func viewDidLoad() {
@@ -40,7 +44,9 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
     }
     
     func reloadData() {
+        
         newsLoader.loadNews()
+        
           }
     
     func refreshUI() {

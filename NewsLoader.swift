@@ -11,18 +11,20 @@ import UIKit
 import CoreData
 import SystemConfiguration
 
-protocol NewsLoaderDelegate {
+protocol NewsLoaderDelegate: class {
     
     func didLoadNews(news: [NewsData])
 
 }
 
+
 class NewsLoader {
     
-    var newsData = [NewsData]()
+    let parser = Parser()
+    let newsStorage = NewsStorageManager()
     var isLoading = false
-    var delegate: NewsLoaderDelegate? = nil
-    var newsTableViewCell = NewsTableViewCell()
+
+    weak var delegate: NewsLoaderDelegate? = nil
     
     func loadNews(){
         if isLoading {
@@ -33,31 +35,24 @@ class NewsLoader {
         guard let url = URL(string: todoEndpoint) else {
             print("Error: cannot create URL")
             return
-            //vihrivinrnvirnvirnvir
         }
         let urlRequest = URLRequest(url: url)
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config)
-        let task = session.dataTask(with: urlRequest, completionHandler: { (data, response, error) in
+        let task = session.dataTask(with: urlRequest, completionHandler: { [weak self] (data, response, error) in
             if let data = data {
-                let parser = Parser()
-                parser.parseData(data: data)
-                self.isLoading = false
+                guard let strongSelf = self else {return}
+                strongSelf.isLoading = false
+                var parsedData = [Dictionary<String, Any>]()
+                parsedData = strongSelf.parser.parseData(data: data)
                 DispatchQueue.main.async {
-                    parser.appDelegate.saveContext()
-                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                    let managedContext = appDelegate.persistentContainer.viewContext
-                    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewsData")
-                    let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
-                    fetchRequest.sortDescriptors = [sortDescriptor]
-                    do {
-                        if let results = try managedContext.fetch(fetchRequest) as? [NewsData] {
-                            self.delegate?.didLoadNews(news: results)
-                        }
-                    } catch let error as NSError {
-                        print("Could not fetch \(error), \(error.userInfo)")
+                    
+                    if self?.newsStorage != nil {
+                        NewsStorageManager.sharedInstance.createNewsList(newsDictionaryArray: (parsedData as? [Dictionary<String, Any>])!)
                     }
+
                 }
+                
                 if let error = error{
                     print("Error:\(error) + Description:\(error.localizedDescription)")
                     return
