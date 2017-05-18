@@ -42,7 +42,7 @@ class LoadingImageView: UIImageView {
             urlRequest.timeoutInterval = 1
             loadTask?.cancel()
             loadTask = session?.dataTask(with: urlRequest, completionHandler: { (data, response, error) in
-                if let data = data{
+                if let data = data {
                     DispatchQueue.main.async{
                         self.image = UIImage(data: data)
                         self.spinner.stopAnimating()

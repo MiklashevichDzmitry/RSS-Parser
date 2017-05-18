@@ -18,7 +18,13 @@ class DetailViewController: UIViewController {
             shortDescriptionLabel.text = newsItem.shortDesc
         }
         
+        
+        if newsData?.imageURL == nil {
+        detailImage.image = #imageLiteral(resourceName: "noImageSelected")
+        }
+        
         if let newsItemImageUrl = newsData?.imageURL{
+
             detailImage.imageFromUrl(urlString: newsItemImageUrl)
         }
     }

@@ -16,7 +16,6 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
     
     var newsLoader: NewsLoader
     let dateFormatter = DateFormatter()
-   
     
     required init?(coder aDecoder: NSCoder) {
         self.newsLoader = NewsLoader()
@@ -26,7 +25,7 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(forName: NewsStorageManager.updateNotificationKey, object: nil, queue: nil) { notification in
+           NotificationCenter.default.addObserver(forName: NewsStorageManager.updateNotificationKey, object: nil, queue: nil) { notification in
            self.currentNews = NewsStorageManager.sharedInstance.fetchCurrentObjects()
            self.refreshUI()
         }
@@ -90,27 +89,24 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
             } else {
                 cell.ifGalleryLabel.isHidden = true
             }
+            cell.shouldHideImage(newsImageURL: item.imageURL)
         }
-        
-        cell.dateLabel.text = dateFormatter.string(from: item.value(forKey: "date") as! Date)
+  
+        cell.dateLabel.text = dateFormatter.string(from: (item.value(forKey: "date") as? Date)!)
         cell.titleLabel.text = item.value(forKey: "newsTitle") as! String?
-        cell.newsImage.imageFromUrl(urlString: item.value(forKey: "imageURL") as! String)
-        
-        
+        if let newsImage = item.value(forKey: "imageURL") {
+            cell.newsImage.imageFromUrl(urlString: newsImage as! String)
+        }
         return cell
     }
 
 
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         selectedIndex = indexPath.row
         performSegue(withIdentifier: "detailSegue", sender: self)
-        
     }
-    
-  
-        
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "detailSegue") {
             let detailViewController = segue.destination as! DetailViewController
