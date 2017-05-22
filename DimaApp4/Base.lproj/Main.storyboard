@@ -30,7 +30,7 @@
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="AZP-VL-rtZ" customClass="LoadingImageView" customModule="DimaApp4" customModuleProvider="target">
                                             <rect key="frame" x="8" y="12.5" width="80" height="80"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" secondItem="AZP-VL-rtZ" secondAttribute="height" multiplier="1:1" id="QOd-PC-XBx"/>
+                                                <constraint firstAttribute="width" secondItem="AZP-VL-rtZ" secondAttribute="height" multiplier="1:1" priority="999" id="QOd-PC-XBx"/>
                                                 <constraint firstAttribute="width" constant="80" id="e42-OJ-HK6" userLabel="Universal Width"/>
                                                 <constraint firstAttribute="width" id="hG2-fz-uJK"/>
                                             </constraints>

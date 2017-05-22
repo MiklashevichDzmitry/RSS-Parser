@@ -42,14 +42,15 @@ class LoadingImageView: UIImageView {
             urlRequest.timeoutInterval = 1
             loadTask?.cancel()
             loadTask = session?.dataTask(with: urlRequest, completionHandler: { (data, response, error) in
-                if let data = data {
-                    DispatchQueue.main.async{
+                DispatchQueue.main.async{
+                    if let data = data {
                         self.image = UIImage(data: data)
                         self.spinner.stopAnimating()
+                        
+                    } else {
+                        self.image = #imageLiteral(resourceName: "No_Photo_Available")
+                        self.spinner.stopAnimating()
                     }
-                } else {
-                    self.image = #imageLiteral(resourceName: "No_Photo_Available")
-                    self.spinner.stopAnimating()
                 }
             }); loadTask?.resume()
         }

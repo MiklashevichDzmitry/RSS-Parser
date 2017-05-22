@@ -73,7 +73,7 @@ class NewsTableViewCell: UITableViewCell {
     }
     
     override func prepareForReuse() {
-     
+        
         if self.zeroWidthConstraint.isActive == true {
             self.zeroWidthConstraint.isActive = false
         }
