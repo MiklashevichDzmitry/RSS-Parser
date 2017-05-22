@@ -9,13 +9,14 @@
 import UIKit
 import CoreData
 
-class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
+class NewsTableViewController: UITableViewController, NewsLoaderDelegate, NSFetchedResultsControllerDelegate {
     
     var selectedIndex: Int = 1
-    var currentNews: [NewsData]?
     
     var newsLoader: NewsLoader
     let dateFormatter = DateFormatter()
+    
+    let fetchedResultsController = NewsStorageManager.sharedInstance.allNewsFetchedResultsController()
     
     required init?(coder aDecoder: NSCoder) {
         self.newsLoader = NewsLoader()
@@ -25,13 +26,17 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-           NotificationCenter.default.addObserver(forName: NewsStorageManager.updateNotificationKey, object: nil, queue: nil) { notification in
-           self.currentNews = NewsStorageManager.sharedInstance.fetchCurrentObjects()
-           self.refreshUI()
+        NotificationCenter.default.addObserver(forName: NewsStorageManager.updateNotificationKey, object: nil, queue: nil) { [weak self] notification in
+            guard let strongSelf = self else {return}
+            do {
+                try strongSelf.fetchedResultsController.performFetch()
+            } catch let err {
+                print(err)
+            }
+            
+            strongSelf.refreshUI()
         }
-        
     }
-    
 
     override func viewDidLoad() {
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -56,7 +61,6 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
     }
 
     func didLoadNews(news: [NewsData]) {
-        currentNews = news
         refreshUI()
     }
     
@@ -67,7 +71,8 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
    
-        return currentNews?.count ?? 0
+        let count = fetchedResultsController.sections?[section].numberOfObjects
+        return count ?? 0
         
     }
     
@@ -80,7 +85,7 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
             fatalError("The dequeued cell is not an instance of NewsTableViewCell.")
         }
         
-        let item = currentNews![indexPath.row]
+        let item = fetchedResultsController.object(at: indexPath) as! NewsData
         
         if let currentImages = item.getImages {
             if currentImages.count > 1  {
@@ -110,8 +115,9 @@ class NewsTableViewController: UITableViewController, NewsLoaderDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "detailSegue") {
             let detailViewController = segue.destination as! DetailViewController
-            detailViewController.newsData = currentNews![selectedIndex]
-          
+            if let fetchedObjects = fetchedResultsController.fetchedObjects, selectedIndex < fetchedObjects.count  {
+                detailViewController.newsData = fetchedObjects[selectedIndex] as? NewsData
+            }
         }
     }
 }

@@ -28,7 +28,14 @@ class NewsStorageManager {
     let dateFormatter = DateFormatter()
     weak var delegate: NewsLoaderDelegate?
     
-    
+    func allNewsFetchedResultsController() -> NSFetchedResultsController<NSFetchRequestResult> {
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewsData")
+        let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: managedContext, sectionNameKeyPath: nil, cacheName: nil)
+        return frc
+    }
     
     func createNewsList(newsDictionaryArray: [Dictionary<String, Any>]) {
         
@@ -59,21 +66,6 @@ class NewsStorageManager {
         }
         NotificationCenter.default.post(name: NewsStorageManager.updateNotificationKey, object: nil)
         appDelegate.saveContext()
-    }
-    
-    func fetchCurrentObjects() -> [NewsData] {
-       
-        var newsList = [NewsData]()
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewsData")
-        let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        fetchRequest.fetchBatchSize = 20
-        do {
-            newsList = try managedContext.fetch(fetchRequest) as! [NewsData]
-        } catch let error as NSError {
-            print("Error: \(error) " + "description \(error.localizedDescription)")
-            }
-        return newsList
     }
     
     func presense(guid: String) -> Bool? {
