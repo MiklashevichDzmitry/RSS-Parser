@@ -15,8 +15,6 @@ class NewsStorageManager {
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     private var managedContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    //private var privateManagedContext = (UIApplication.shared.delegate as! AppDelegate).privateManagedObjectContext
-  
     
     static let sharedInstance = {
         return NewsStorageManager()
@@ -82,25 +80,31 @@ class NewsStorageManager {
     
     func saveNewsObject(newsTitle: String, newsDescription: String, newsImageURL: String?, imagesForGallery: [String], newsLink: String , newsDate: NSDate) {
         
-        managedContext.performAndWait {
+        appDelegate.persistentContainer.performBackgroundTask() { (moc) in
 
-            let newsEntity = NSEntityDescription.entity(forEntityName: "NewsData", in: self.managedContext)
-            let newsImageEntity = NSEntityDescription.entity(forEntityName: "NewsImages", in: self.managedContext)
-
-            if let createdNewsObject = NSManagedObject(entity: newsEntity!, insertInto: self.managedContext) as? NewsData {
+            let newsEntity = NSEntityDescription.entity(forEntityName: "NewsData", in: moc)
+            let newsImageEntity = NSEntityDescription.entity(forEntityName: "NewsImages", in: moc)
+            
+            if let createdNewsObject = NSManagedObject(entity: newsEntity!, insertInto: moc) as? NewsData {
                 createdNewsObject.newsTitle = newsTitle
                 createdNewsObject.shortDesc = newsDescription
                 createdNewsObject.date = newsDate
                 createdNewsObject.link = newsLink
                 createdNewsObject.guid = newsLink
                 createdNewsObject.imageURL = newsImageURL
-                
+        
                 for imageForGallery in imagesForGallery {
-                    if let newsImage = NSManagedObject(entity: newsImageEntity!, insertInto: self.managedContext) as? NewsImages {
+                    if let newsImage = NSManagedObject(entity: newsImageEntity!, insertInto: moc) as? NewsImages {
                         newsImage.url = imageForGallery
                         createdNewsObject.addToGetImages(newsImage)
                     }
                 }
+            }
+            do {
+                try moc.save()
+            } catch {
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }

@@ -76,11 +76,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return container
     }()
     
-    lazy var privateManagedObjectContext: NSManagedObjectContext = {
-        var privateManagedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        // privateManagedObjectContext.parentContext = self.managedObjectContext
-        return privateManagedObjectContext
-    }()
     
     // MARK: - Core Data Saving support
     

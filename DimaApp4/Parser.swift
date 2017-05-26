@@ -86,7 +86,7 @@ class Parser: NSObject, XMLParserDelegate {
                 currentNewsItem["imagesForGallery"] = [String]()
             }
             
-            if var imagesForGallery = currentNewsItem["imagesForGallery"] as? [String] { // TODO: fix
+            if var imagesForGallery = currentNewsItem["imagesForGallery"] as? [String] { // TODO: fix; mutable optional array
                 imagesForGallery.append(currentChar!)
                 currentNewsItem["imagesForGallery"] = imagesForGallery
             }
